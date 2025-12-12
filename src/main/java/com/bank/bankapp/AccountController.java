@@ -1,7 +1,6 @@
 package com.bank.bankapp;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin("*")
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
@@ -18,15 +16,9 @@ public class AccountController {
     private AccountRepository accountRepository;
 
     // Create new account
-    // @PostMapping
-    // public Account createAccount(@RequestBody Account account) {
-    //     return accountRepository.save(account);
-    // }
-
     @PostMapping
-    public ResponseEntity<Account> createAccount(@RequestBody Account account) {
-    Account saved = accountRepository.save(account);
-    return ResponseEntity.ok(saved);
+    public Account createAccount(@RequestBody Account account) {
+        return accountRepository.save(account);
     }
 
     // Get all accounts
@@ -42,24 +34,8 @@ public class AccountController {
     }
 
     // Update account
-//     @PutMapping("/{id}")
-//     public Account updateAccount(@PathVariable Long id, @RequestBody Account updatedAccount) {
-//     return accountRepository.findById(id).map(account -> {
-
-//         account.setName(updatedAccount.getName());
-//         account.setBalance(updatedAccount.getBalance());
-//         account.setAccountType(updatedAccount.getAccountType());
-//         account.setAccountNo(updatedAccount.getAccountNo());
-//         account.setIfscCode(updatedAccount.getIfscCode());
-//         // created_date should NOT be changed
-//         return accountRepository.save(account);
-
-//     }).orElse(null);
-// }
-
-@PutMapping("/{id}")
-public ResponseEntity<?> updateAccount(@PathVariable Long id, @RequestBody Account updatedAccount) {
-
+    @PutMapping("/{id}")
+    public Account updateAccount(@PathVariable Long id, @RequestBody Account updatedAccount) {
     return accountRepository.findById(id).map(account -> {
 
         account.setName(updatedAccount.getName());
@@ -68,75 +44,45 @@ public ResponseEntity<?> updateAccount(@PathVariable Long id, @RequestBody Accou
         account.setAccountNo(updatedAccount.getAccountNo());
         account.setIfscCode(updatedAccount.getIfscCode());
         // created_date should NOT be changed
+        return accountRepository.save(account);
 
-        accountRepository.save(account);
-        return ResponseEntity.ok("Account Updated Successfully ✔");
-
-    }).orElseGet(() -> ResponseEntity.status(404).body("❌ Account ID not found"));
+    }).orElse(null);
 }
 
-
 // PATCH: Update only specific fields
-// @PatchMapping("/{id}")
-// public Account patchAccount(@PathVariable Long id, @RequestBody Account updatedFields) {
-//     return accountRepository.findById(id).map(account -> {
-
-//         if (updatedFields.getName() != null) {
-//             account.setName(updatedFields.getName());
-//         }
-//         if (updatedFields.getAccountNo() != null) {
-//             account.setAccountNo(updatedFields.getAccountNo());
-//         }
-//         if (updatedFields.getBalance() != null) {
-//             account.setBalance(updatedFields.getBalance());
-//         }
-//         if (updatedFields.getAccountType() != null) {
-//             account.setAccountType(updatedFields.getAccountType());
-//         }
-//         if (updatedFields.getIfscCode() != null) {
-//             account.setIfscCode(updatedFields.getIfscCode());
-//         }
-
-//         // We do NOT allow changing createdDate in PATCH
-//         return accountRepository.save(account);
-
-//     }).orElse(null);
-// }
 @PatchMapping("/{id}")
-public ResponseEntity<?> patchAccount(@PathVariable Long id, @RequestBody Account updatedFields) {
-
+public Account patchAccount(@PathVariable Long id, @RequestBody Account updatedFields) {
     return accountRepository.findById(id).map(account -> {
 
-        if (updatedFields.getName() != null) account.setName(updatedFields.getName());
-        if (updatedFields.getAccountNo() != null) account.setAccountNo(updatedFields.getAccountNo());
-        if (updatedFields.getBalance() != null) account.setBalance(updatedFields.getBalance());
-        if (updatedFields.getAccountType() != null) account.setAccountType(updatedFields.getAccountType());
-        if (updatedFields.getIfscCode() != null) account.setIfscCode(updatedFields.getIfscCode());
+        if (updatedFields.getName() != null) {
+            account.setName(updatedFields.getName());
+        }
+        if (updatedFields.getAccountNo() != null) {
+            account.setAccountNo(updatedFields.getAccountNo());
+        }
+        if (updatedFields.getBalance() != null) {
+            account.setBalance(updatedFields.getBalance());
+        }
+        if (updatedFields.getAccountType() != null) {
+            account.setAccountType(updatedFields.getAccountType());
+        }
+        if (updatedFields.getIfscCode() != null) {
+            account.setIfscCode(updatedFields.getIfscCode());
+        }
 
-        accountRepository.save(account);
-        return ResponseEntity.ok("Account Updated (PATCH) Successfully ✔");
+        // We do NOT allow changing createdDate in PATCH
+        return accountRepository.save(account);
 
-    }).orElseGet(() -> ResponseEntity.status(404).body("❌ Account ID not found"));
+    }).orElse(null);
 }
 
 
 
    // Delete account
-    // @DeleteMapping("/{id}")
-    // public void deleteAccount(@PathVariable Long id) {
-    //     accountRepository.deleteById(id);
-    // }
-
     @DeleteMapping("/{id}")
-public ResponseEntity<String> deleteAccount(@PathVariable Long id) {
-
-    if (!accountRepository.existsById(id)) {
-        return ResponseEntity.status(404).body("Account not found");
+    public void deleteAccount(@PathVariable Long id) {
+        accountRepository.deleteById(id);
     }
-
-    accountRepository.deleteById(id);
-    return ResponseEntity.ok("Account deleted successfully");
-}
 
 
     // transaction controller
@@ -165,23 +111,10 @@ public String transfer(@RequestParam Long fromAccountId, @RequestParam Long toAc
 
 // Get transaction history for account
 // 1️⃣ Simple — Get all transactions
-// @GetMapping("/{id}/transactions")
-// public List<Transaction> getTransactions(@PathVariable Long id) {
-//     return accountService.getTransactions(id);
-// }
-
 @GetMapping("/{id}/transactions")
-public ResponseEntity<?> getTransactions(@PathVariable Long id) {
-
-    if (!accountRepository.existsById(id)) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body("❌ Account ID not found: " + id);
-    }
-
-    List<Transaction> transactions = accountService.getTransactions(id);
-    return ResponseEntity.ok(transactions);
+public List<Transaction> getTransactions(@PathVariable Long id) {
+    return accountService.getTransactions(id);
 }
-
 
 // 2️⃣ Filter — type OR date range
 @GetMapping("/{id}/transactions/filter")
