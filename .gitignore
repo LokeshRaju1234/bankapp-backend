@@ -33,4 +33,3 @@ build/
 .vscode/
 # Spring Boot config (local secrets)
 src/main/resources/application.properties
-.env
