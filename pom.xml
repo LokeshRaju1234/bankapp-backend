@@ -77,6 +77,13 @@
   <artifactId>spring-security-crypto</artifactId>
 </dependency>
 
+<!-- PostgreSQL JDBC Driver -->
+<dependency>
+  <groupId>org.postgresql</groupId>
+  <artifactId>postgresql</artifactId>
+  <scope>runtime</scope>
+</dependency>
+
 </dependencies>
 <build>
 <plugins>

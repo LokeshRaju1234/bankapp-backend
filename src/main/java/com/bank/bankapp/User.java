@@ -3,6 +3,7 @@ package com.bank.bankapp;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id

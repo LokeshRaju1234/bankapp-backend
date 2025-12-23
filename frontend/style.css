@@ -1,0 +1,221 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    margin: 0;
+    background-color: #eef2f3;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    background: #003399;
+    padding: 20px;
+    min-height: 100vh;
+    color: white;
+    position: fixed;
+}
+.sidebar h2 {
+    margin-bottom: 25px;
+}
+.sidebar button {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0;
+    border: none;
+    background: #0055ff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.sidebar button:hover {
+    background: #0033cc;
+}
+
+/* Main content */
+.main {
+    margin-left: 260px;
+    padding: 25px;
+    width: 100%;
+}
+.main h1 {
+    margin-top: 0;
+}
+
+/* Cards */
+.card {
+    background: white;
+    padding: 18px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+.card input {
+    width: 200px;
+    padding: 7px;
+    margin: 5px;
+}
+.card button {
+    padding: 8px 14px;
+    margin: 5px;
+    background: #0077ff;
+    border: none;
+    color: white;
+    border-radius: 4px;
+}
+.card button:hover {
+    background: #005bcc;
+}
+
+/* Chart size */
+#balanceChart {
+    max-width: 650px;
+    margin-top: 20px;
+}
+
+/* Added: User Account ID Box */
+#userAccountIdBox 
+{
+    background: #eef7ff;
+    border-left: 6px solid #007bff;
+    padding: 16px;
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 6px;
+    color: #003f88;
+    display: inline-block;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+}
+#userAccountIdBox:hover {
+    background: #dceeff;
+    transform: scale(1.01);
+    transition: 0.2s;
+}
+
+/* ============================
+   TOAST NOTIFICATIONS
+============================ */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.toast {
+    min-width: 260px;
+    margin-bottom: 12px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    animation: slideIn 0.4s ease forwards;
+}
+
+.toast.success { background: linear-gradient(135deg, #22c55e, #16a34a); }
+.toast.error   { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+.toast.info    { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ============================
+   ACCOUNT CARDS (DASHBOARD UX)
+============================ */
+.accounts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 22px;
+    margin-top: 25px;
+}
+
+.account-card {
+    background: linear-gradient(135deg, #ffffff, #eef4ff);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+    position: relative;
+    animation: fadeUp 0.6s ease forwards;
+    transition: transform 0.3s;
+}
+
+.account-card:hover {
+    transform: translateY(-6px);
+}
+
+.account-card h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #003399;
+}
+
+.account-card .acc-no {
+    margin-top: 6px;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: #555;
+}
+
+.account-card .balance {
+    margin-top: 16px;
+    font-size: 26px;
+    font-weight: bold;
+    color: #0077ff;
+}
+
+.account-card .badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: #0077ff;
+    color: white;
+    padding: 4px 12px;
+    font-size: 12px;
+    border-radius: 20px;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(25px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* added new */
+/* =========================
+   GLOBAL LOADER
+========================= */
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+}
+
+.loader-overlay.hidden {
+  display: none;
+}
+
+.loader {
+  width: 55px;
+  height: 55px;
+  border: 5px solid #e5e7eb;
+  border-top: 5px solid #2563eb;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* LOTTIE LOADER SIZE */
+#lottieLoader {
+  width: 420px;     /* increase/decrease as you like */
+  height: 420px;
+}

@@ -1,0 +1,85 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Banking App</title>
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+
+<div class="auth-card">
+    <h2>Login</h2>
+
+    <input type="text" id="loginUsername" placeholder="Username">
+    <input type="password" id="loginPassword" placeholder="Password">
+
+    <button id="loginBtn">Login</button>
+
+    <p id="loginMsg"></p>
+
+    <p>
+        New user? <a href="signup.html">Create Account</a>
+    </p>
+</div>
+
+<script src="auth.js"></script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login - Secure Bank</title>
+  <!-- added new -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="auth.css">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+  <script src="loader.js"></script>
+</head>
+<body>
+<!-- added new -->
+ <!-- GLOBAL LOADER -->
+<div id="globalLoader" class="loader-overlay hidden">
+  <div id="lottieLoader"></div>
+</div>
+
+<div class="auth-container">
+
+  <!-- LEFT -->
+  <div class="auth-left">
+    <div class="auth-card">
+      <h2>Login</h2>
+
+      <input type="text" id="loginUsername" placeholder="Username">
+      <input type="password" id="loginPassword" placeholder="Password">
+
+      <button id="loginBtn">Login</button>
+
+      <p id="loginMsg"></p>
+
+      <p>
+        New user? <a href="signup.html">Create Account</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="auth-right">
+    <div class="bank-visual">
+      <div class="bank-logo">🏦</div>
+      <h1>Secure Bank</h1>
+      <p>
+        Login securely using JWT authentication with
+        protected APIs and refresh tokens.
+      </p>
+      <div class="security-badge">🔐 JWT Protected</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="auth.js"></script>
+</body>
+</html>
