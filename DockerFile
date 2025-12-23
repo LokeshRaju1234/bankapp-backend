@@ -24,4 +24,4 @@ COPY --from=build /build/target/bankapp-0.0.1-SNAPSHOT.war app.war
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.war"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=render", "app.war"]
