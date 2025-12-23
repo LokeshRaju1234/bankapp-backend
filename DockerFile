@@ -1,14 +1,27 @@
-# Use Java 17 (matches your Spring Boot)
+# ---------- BUILD STAGE ----------
+FROM maven:3.9.9-eclipse-temurin-17 AS build
+
+WORKDIR /build
+
+# Copy pom.xml and download dependencies
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+# Copy source code
+COPY src ./src
+
+# Build the WAR
+RUN mvn clean package
+
+
+# ---------- RUNTIME STAGE ----------
 FROM eclipse-temurin:17-jdk
 
-# Set working directory
 WORKDIR /app
 
-# Copy WAR file
-COPY target/bankapp-0.0.1-SNAPSHOT.war app.war
+# Copy WAR from build stage
+COPY --from=build /build/target/bankapp-0.0.1-SNAPSHOT.war app.war
 
-# Expose port used by Spring Boot
 EXPOSE 8080
 
-# Run the application
 ENTRYPOINT ["java", "-jar", "app.war"]
