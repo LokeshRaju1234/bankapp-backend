@@ -9,142 +9,174 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/accounts")
 public class AccountController {
 
     @Autowired
+    private AccountService accountService;
+
+    @Autowired
     private AccountRepository accountRepository;
 
-    // Create new account
+    /* ---------------- CREATE ACCOUNT ---------------- */
     @PostMapping
     public Account createAccount(@RequestBody Account account) {
-        return accountRepository.save(account);
+        return accountService.createAccount(account);
     }
 
-    // Get all accounts
+    /* ---------------- GET ACCOUNTS ---------------- */
     @GetMapping
     public List<Account> getAllAccounts() {
         return accountRepository.findAll();
     }
 
-    // Get account by ID
     @GetMapping("/{id}")
     public Optional<Account> getAccountById(@PathVariable Long id) {
         return accountRepository.findById(id);
     }
 
-    // Update account
+    /* ---------------- UPDATE ACCOUNT ---------------- */
     @PutMapping("/{id}")
-    public Account updateAccount(@PathVariable Long id, @RequestBody Account updatedAccount) {
-    return accountRepository.findById(id).map(account -> {
+    public Account updateAccount(
+            @PathVariable Long id,
+            @RequestBody Account updatedAccount) {
 
-        account.setName(updatedAccount.getName());
-        account.setBalance(updatedAccount.getBalance());
-        account.setAccountType(updatedAccount.getAccountType());
-        account.setAccountNo(updatedAccount.getAccountNo());
-        account.setIfscCode(updatedAccount.getIfscCode());
-        // created_date should NOT be changed
-        return accountRepository.save(account);
+        return accountRepository.findById(id).map(account -> {
 
-    }).orElse(null);
-}
+            account.setName(updatedAccount.getName());
+            account.setBalance(updatedAccount.getBalance());
+            account.setAccountType(updatedAccount.getAccountType());
+            account.setAccountNo(updatedAccount.getAccountNo());
+            account.setIfscCode(updatedAccount.getIfscCode());
 
-// PATCH: Update only specific fields
-@PatchMapping("/{id}")
-public Account patchAccount(@PathVariable Long id, @RequestBody Account updatedFields) {
-    return accountRepository.findById(id).map(account -> {
+            return accountRepository.save(account);
 
-        if (updatedFields.getName() != null) {
-            account.setName(updatedFields.getName());
-        }
-        if (updatedFields.getAccountNo() != null) {
-            account.setAccountNo(updatedFields.getAccountNo());
-        }
-        if (updatedFields.getBalance() != null) {
-            account.setBalance(updatedFields.getBalance());
-        }
-        if (updatedFields.getAccountType() != null) {
-            account.setAccountType(updatedFields.getAccountType());
-        }
-        if (updatedFields.getIfscCode() != null) {
-            account.setIfscCode(updatedFields.getIfscCode());
-        }
+        }).orElseThrow(() ->
+            new RuntimeException("Account not found")
+        );
+    }
 
-        // We do NOT allow changing createdDate in PATCH
-        return accountRepository.save(account);
+    /* ---------------- PATCH ACCOUNT ---------------- */
+    @PatchMapping("/{id}")
+    public Account patchAccount(
+            @PathVariable Long id,
+            @RequestBody Account updatedFields) {
 
-    }).orElse(null);
-}
+        return accountRepository.findById(id).map(account -> {
 
+            if (updatedFields.getName() != null) {
+                account.setName(updatedFields.getName());
+            }
+            if (updatedFields.getAccountNo() != null) {
+                account.setAccountNo(updatedFields.getAccountNo());
+            }
+            if (updatedFields.getBalance() != null) {
+                account.setBalance(updatedFields.getBalance());
+            }
+            if (updatedFields.getAccountType() != null) {
+                account.setAccountType(updatedFields.getAccountType());
+            }
+            if (updatedFields.getIfscCode() != null) {
+                account.setIfscCode(updatedFields.getIfscCode());
+            }
 
+            return accountRepository.save(account);
 
-   // Delete account
+        }).orElseThrow(() ->
+            new RuntimeException("Account not found")
+        );
+    }
+
+    /* ---------------- DELETE ACCOUNT (SECURE) ---------------- */
     @DeleteMapping("/{id}")
-    public void deleteAccount(@PathVariable Long id) {
-        accountRepository.deleteById(id);
+    public ResponseEntity<String> deleteAccount(@PathVariable Long id) {
+        accountService.deleteAccount(id);
+        return ResponseEntity.ok("Account deleted successfully");
     }
 
+    /* ---------------- TRANSACTIONS ---------------- */
+    @PostMapping("/{id}/deposit")
+    public Account deposit(
+            @PathVariable Long id,
+            @RequestParam Double amount,
+            @RequestParam(required = false) String description) {
 
-    // transaction controller
-    // inject service
-@Autowired
-private AccountService accountService;
-
-// Deposit
-@PostMapping("/{id}/deposit")
-public Account deposit(@PathVariable Long id, @RequestParam Double amount, @RequestParam(required = false) String description) {
-    return accountService.deposit(id, amount, description == null ? "Deposit" : description);
-}
-
-// Withdraw
-@PostMapping("/{id}/withdraw")
-public Account withdraw(@PathVariable Long id, @RequestParam Double amount, @RequestParam(required = false) String description) {
-    return accountService.withdraw(id, amount, description == null ? "Withdraw" : description);
-}
-
-// Transfer
-@PostMapping("/transfer")
-public String transfer(@RequestParam Long fromAccountId, @RequestParam Long toAccountId, @RequestParam Double amount, @RequestParam(required=false) String description) {
-    accountService.transfer(fromAccountId, toAccountId, amount, description == null ? "Transfer" : description);
-    return "Transfer successful";
-}
-
-// Get transaction history for account
-// 1️⃣ Simple — Get all transactions
-@GetMapping("/{id}/transactions")
-public List<Transaction> getTransactions(@PathVariable Long id) {
-    return accountService.getTransactions(id);
-}
-
-// 2️⃣ Filter — type OR date range
-@GetMapping("/{id}/transactions/filter")
-public ResponseEntity<List<Transaction>> getFilteredTransactions(
-        @PathVariable Long id,
-        @RequestParam(required = false) String type,
-        @RequestParam(required = false) String start,
-        @RequestParam(required = false) String end
-) {
-    // filter by type
-    if (type != null) {
-        return ResponseEntity.ok(accountService.getTransactionsByType(id, type));
+        return accountService.deposit(
+                id,
+                amount,
+                description == null ? "Deposit" : description
+        );
     }
 
-    // filter by date range
-    if (start != null && end != null) {
-        LocalDateTime startDate = LocalDateTime.parse(start);
-        LocalDateTime endDate = LocalDateTime.parse(end);
-        return ResponseEntity.ok(accountService.getTransactionsByDateRange(id, startDate, endDate));
+    @PostMapping("/{id}/withdraw")
+    public Account withdraw(
+            @PathVariable Long id,
+            @RequestParam Double amount,
+            @RequestParam(required = false) String description) {
+
+        return accountService.withdraw(
+                id,
+                amount,
+                description == null ? "Withdraw" : description
+        );
     }
 
-    // default → all
-    return ResponseEntity.ok(accountService.getTransactions(id));
-}
+    @PostMapping("/transfer")
+    public String transfer(
+            @RequestParam Long fromAccountId,
+            @RequestParam Long toAccountId,
+            @RequestParam Double amount,
+            @RequestParam(required = false) String description) {
 
-// Account summary
-@GetMapping("/{id}/summary")
-public ResponseEntity<AccountSummary> getAccountSummary(@PathVariable Long id) {
-    AccountSummary summary = accountService.getAccountSummary(id);
-    return ResponseEntity.ok(summary);
-}
+        accountService.transfer(
+                fromAccountId,
+                toAccountId,
+                amount,
+                description == null ? "Transfer" : description
+        );
+        return "Transfer successful";
+    }
 
+    /* ---------------- TRANSACTION HISTORY ---------------- */
+    @GetMapping("/{id}/transactions")
+    public List<Transaction> getTransactions(@PathVariable Long id) {
+        return accountService.getTransactions(id);
+    }
+
+    @GetMapping("/{id}/transactions/filter")
+    public ResponseEntity<List<Transaction>> getFilteredTransactions(
+            @PathVariable Long id,
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String start,
+            @RequestParam(required = false) String end) {
+
+        if (type != null) {
+            return ResponseEntity.ok(
+                accountService.getTransactionsByType(id, type)
+            );
+        }
+
+        if (start != null && end != null) {
+            LocalDateTime startDate = LocalDateTime.parse(start);
+            LocalDateTime endDate = LocalDateTime.parse(end);
+            return ResponseEntity.ok(
+                accountService.getTransactionsByDateRange(
+                    id, startDate, endDate
+                )
+            );
+        }
+
+        return ResponseEntity.ok(accountService.getTransactions(id));
+    }
+
+    /* ---------------- ACCOUNT SUMMARY ---------------- */
+    @GetMapping("/{id}/summary")
+    public ResponseEntity<AccountSummary> getAccountSummary(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+            accountService.getAccountSummary(id)
+        );
+    }
 }

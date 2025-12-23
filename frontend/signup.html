@@ -1,0 +1,82 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Register - Banking App</title>
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="auth-card">
+    <h2>Create Login Account</h2>
+
+    <input type="text" id="regUsername" placeholder="Username">
+    <input type="password" id="regPassword" placeholder="Password">
+    <input type="password" id="regConfirmPassword" placeholder="Confirm Password">
+
+    <button id="registerBtn">Register</button>
+
+    <p id="registerMsg"></p>
+
+    <p>
+        Already registered? <a href="login.html">Login</a>
+    </p>
+</div>
+
+<script src="auth.js"></script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Register - Secure Bank</title>
+    <!-- added new  -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <script src="loader.js"></script>
+  </head>
+  <body>
+    <!-- added new -->
+    <!-- GLOBAL LOADER -->
+     <div id="globalLoader" class="loader-overlay hidden">
+  <div id="lottieLoader"></div>
+</div>
+
+    <div class="auth-container">
+      <!-- LEFT -->
+      <div class="auth-left">
+        <div class="auth-card">
+          <h2>Create Account</h2>
+
+          <input type="text" id="regUsername" placeholder="Username">
+          <input type="password" id="regPassword" placeholder="Password">
+          <input
+            type="password"
+            id="regConfirmPassword"
+            placeholder="Confirm Password">
+
+          <button id="registerBtn">Register</button>
+
+          <p id="registerMsg"></p>
+
+          <p>Already registered? <a href="login.html">Login</a></p>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="auth-right">
+        <div class="bank-visual">
+          <div class="bank-logo">💳</div>
+          <h1>Open Your Bank</h1>
+          <p>Create your secure login to access modern banking features.</p>
+          <div class="security-badge">🛡 Secure Access</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="auth.js"></script>
+  </body>
+</html>

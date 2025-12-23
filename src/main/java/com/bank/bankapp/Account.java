@@ -4,7 +4,12 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "account")    
+@Table(
+    name = "account",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"account_no", "ifsc_code"})
+    }
+)
 public class Account {
 
     @Id
@@ -12,18 +17,24 @@ public class Account {
     @Column(name = "account_id")
     private Long accountId;
 
-    @Column(name = "account_no")
+    @Column(name = "account_no", nullable = false)
     private String accountNo;
 
+    @Column(nullable = false)
     private String name;
 
     @Column(name = "account_type")
     private String accountType;
 
+    @Column(nullable = false)
     private Double balance;
 
-    @Column(name = "ifsc_code")
-    private String ifscCode;  // <-- ADDED
+    @Column(name = "ifsc_code", nullable = false)
+    private String ifscCode;
+
+    // 🔐 OWNER OF THIS ACCOUNT (VERY IMPORTANT)
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @Column(name = "created_date")
     private LocalDateTime createdDate = LocalDateTime.now();
@@ -72,6 +83,14 @@ public class Account {
 
     public void setIfscCode(String ifscCode) {
         this.ifscCode = ifscCode;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public LocalDateTime getCreatedDate() {
