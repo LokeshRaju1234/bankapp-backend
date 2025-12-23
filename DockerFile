@@ -1,0 +1,14 @@
+# Use Java 17 (matches your Spring Boot)
+FROM eclipse-temurin:17-jdk
+
+# Set working directory
+WORKDIR /app
+
+# Copy WAR file
+COPY target/bankapp-0.0.1-SNAPSHOT.war app.war
+
+# Expose port used by Spring Boot
+EXPOSE 8080
+
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.war"]
